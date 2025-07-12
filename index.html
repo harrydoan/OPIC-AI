@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning App - OPIC Practice</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Ứng dụng học tiếng Anh qua điền vào chỗ trống và sắp xếp câu">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 English Learning</h1>
+            <p>Học tiếng Anh qua điền vào chỗ trống</p>
+        </div>
+
+        <div class="content">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="input">Nhập liệu</button>
+                <button class="tab-button" data-tab="practice">Luyện tập</button>
+                <button class="tab-button" data-tab="ordering">Sắp xếp câu</button>
+            </div>
+
+            <!-- Tab Nhập liệu -->
+            <div id="input-tab" class="tab-content active">
+                <div class="input-section">
+                    <label for="textInput">Nhập đoạn văn tiếng Anh:</label>
+                    <textarea id="textInput" placeholder="Nhập đoạn văn tiếng Anh ở đây... Mỗi câu sẽ được tách thành một câu hỏi riêng biệt."></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" id="getOPICBtn">🤖 Lấy dữ liệu OPIC</button>
+                    <button class="btn btn-secondary" id="processTextBtn">📝 Xử lý văn bản</button>
+                </div>
+                
+                <div id="loadingMessage" class="loading-container" style="display: none;">
+                    <div class="message">
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <span>Đang lấy dữ liệu từ AI...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="inputMessage"></div>
+                
+                <div id="sentencePreview" class="sentence-list" style="display: none;">
+                    <h3>Các câu đã trích xuất:</h3>
+                    <div id="sentenceList"></div>
+                </div>
+            </div>
+
+            <!-- Tab Luyện tập -->
+            <div id="practice-tab" class="tab-content">
+                <div class="stats">
+                    <h3>📊 Thống kê</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span>Tổng số câu:</span>
+                            <span id="totalQuestions">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Đã trả lời:</span>
+                            <span id="answeredQuestions">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Đúng:</span>
+                            <span id="correctAnswers">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Sai:</span>
+                            <span id="wrongAnswers">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="questionContainer" class="question-container" style="display: none;">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="answers" id="answersContainer"></div>
+                    <button class="btn btn-primary" id="submitAnswer" disabled>Trả lời</button>
+                </div>
+
+                <div id="feedbackContainer" class="feedback-container" style="display: none;">
+                    <div class="feedback">
+                        <h4 id="feedbackTitle"></h4>
+                        <div id="feedbackText"></div>
+                    </div>
+                    <button class="btn btn-primary" id="nextQuestionBtn">Câu tiếp theo</button>
+                </div>
+
+                <div id="practiceMessage" class="message-container">
+                    <div class="message">
+                        Vui lòng nhập đoạn văn ở tab "Nhập liệu" để bắt đầu luyện tập
+                    </div>
+                </div>
+
+                <div id="startPractice" class="start-container" style="display: none;">
+                    <div class="message success">
+                        Đã sẵn sàng với <span id="readyQuestions">0</span> câu hỏi!
+                    </div>
+                    <button class="btn btn-primary" id="startPracticeBtn">🚀 Bắt đầu luyện tập</button>
+                </div>
+            </div>
+
+            <!-- Tab Sắp xếp câu -->
+            <div id="ordering-tab" class="tab-content">
+                <div class="stats">
+                    <h3>🔄 Sắp xếp câu theo thứ tự</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span>Tổng số câu:</span>
+                            <span id="orderingTotalQuestions">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Đã sắp xếp:</span>
+                            <span id="orderingAnswered">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Đúng:</span>
+                            <span id="orderingCorrect">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Sai:</span>
+                            <span id="orderingWrong">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="orderingProgressFill"></div>
+                </div>
+
+                <div id="orderingQuestionContainer" class="question-container" style="display: none;">
+                    <div class="ordering-question-section">
+                        <h4 class="question-title">❓ Câu này ở vị trí thứ mấy trong đoạn văn?</h4>
+                        <div id="orderingQuestionText" class="ordering-sentence"></div>
+                    </div>
+                    
+                    <div class="answers" id="orderingAnswersContainer"></div>
+                    <button class="btn btn-primary" id="submitOrderingAnswer" disabled>Trả lời</button>
+                </div>
+
+                <div id="orderingFeedbackContainer" class="feedback-container" style="display: none;">
+                    <div class="feedback">
+                        <h4 id="orderingFeedbackTitle"></h4>
+                        <p id="orderingFeedbackText"></p>
+                    </div>
+                    <button class="btn btn-primary" id="nextOrderingBtn">Câu tiếp theo</button>
+                </div>
+
+                <div id="orderingMessage" class="message-container">
+                    <div class="message">
+                        Vui lòng nhập đoạn văn ở tab "Nhập liệu" để bắt đầu sắp xếp câu
+                    </div>
+                </div>
+
+                <div id="startOrdering" class="start-container" style="display: none;">
+                    <div class="message success">
+                        Đã sẵn sàng với <span id="readyOrderingQuestions">0</span> câu để sắp xếp!
+                    </div>
+                    <button class="btn btn-primary" id="startOrderingBtn">🔄 Bắt đầu sắp xếp câu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
